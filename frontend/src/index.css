@@ -1,0 +1,19 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-white text-gray-900;
+    font-family: 'Unbounded', sans-serif;
+  }
+  
+  /* Минималистичный стиль для темной темы */
+  .dark-theme {
+    @apply bg-black text-white;
+  }
+}
+
+@layer components {
+  /* Кастомные компоненты можно добавить здесь */
+}
