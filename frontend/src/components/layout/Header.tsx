@@ -30,7 +30,7 @@ const Header = () => {
   return (
     <header className="bg-black text-white sticky top-0 z-50">
       <div className="container mx-auto px-4 lg:px-8">
-        <nav className="flex items-center justify-between h-20">
+        <nav className="flex items-center justify-between h-20 relative">
           {/* Logo - Left */}
           <Link
             to="/"
@@ -61,8 +61,8 @@ const Header = () => {
             </span>
           </Link>
 
-          {/* Desktop Navigation - Right with grouped buttons */}
-          <div className="hidden lg:flex items-center">
+          {/* Desktop Navigation - Centered */}
+          <div className="hidden lg:flex items-center absolute left-1/2 transform -translate-x-1/2">
             <NavGroup items={navItems.slice(1)} />
           </div>
 

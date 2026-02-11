@@ -1,14 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import api from './axios'
-
-export interface Product {
-  id: number
-  name: string
-  price: number
-  description: string
-  image: string
-  category: string
-}
+import { Product } from '@/types'
 
 export const useProducts = () => {
   return useQuery({
