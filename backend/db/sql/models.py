@@ -76,3 +76,7 @@ class Products(Base):
     id: Mapped[int] = mapped_column(BigInteger, primary_key=True)
     description: Mapped[str] = mapped_column(String(255), nullable=False)
     price: Mapped[float] = mapped_column(Numeric, nullable=False)
+
+# TODO сделать отдельную таблицу для кол-во продуктов 
+# сделать таблицу с транзакциями 
+# сделать таблицу для подтверждения личности (Паспортных данных) с флажком *

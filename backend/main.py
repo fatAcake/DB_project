@@ -1,5 +1,7 @@
 from db.session import init_db_on_start_up
 from fastapi import FastAPI
+from api.routers.products_images import router as P_router
+from api.routers.blueprints_images import router as B_router
 import uvicorn
 
 try:
@@ -9,7 +11,8 @@ try:
     # TODO Добавить импорты роутеров
 
     # EXEMPLE: app.include_router(router)
-
+    app.include_router(P_router)
+    app.include_router(B_router)
     if __name__ == "__main__":
         uvicorn.run(app, host="0.0.0.0", port=8000)
 
