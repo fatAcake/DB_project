@@ -18,18 +18,10 @@ async def upload_product_image(
     service: ProductsImagesService = Depends(get_products_images_service)
 ):
     """Загрузка изображения продукта"""
-    file_data = await file.read()
-    
-    # Валидация размера
-    if len(file_data) > 16 * 1024 * 1024:
-        raise HTTPException(400, "File size exceeds 16MB limit (MongoDB document size limit)")
-    
-    # Создаём изображение через сервис
     image = await service.upload_image(
         file=file,
         product_id_sql=product_id_sql
     )
-    
     # Возвращаем ответ без бинарных данных
     return ProductImageResponse(
         id=image.id,
@@ -37,7 +29,7 @@ async def upload_product_image(
         filename=image.filename,
         content_type=image.content_type,
         created_at=image.created_at,
-        image_size=len(file_data)
+        image_size=len(image.image) if image.image else 0
     )
 
 
@@ -46,15 +38,32 @@ async def download_product_image(
     image_id: str,
     service: ProductsImagesService = Depends(get_products_images_service)
 ):
-    """Скачивание изображения продукта"""
+    """Скачивание изображения продукта (только картинка)"""
     image = await service.get_image(image_id)
     
     safe_filename = quote(image.filename, encoding='utf-8')
-    
     return Response(
         content=image.image,
         media_type=image.content_type,
         headers={"Content-Disposition": f'inline; filename="{safe_filename}"'}
+    )
+
+
+@router.get("/{image_id}/info", response_model=ProductImageResponse)
+async def get_image_info(
+    image_id: str,
+    service: ProductsImagesService = Depends(get_products_images_service)
+):
+    """Получение информации об изображении без скачивания"""
+    image = await service.get_image(image_id)
+    
+    return ProductImageResponse(
+        id=image.id,
+        product_id_sql=image.product_id_sql,
+        filename=image.filename,
+        content_type=image.content_type,
+        created_at=image.created_at,
+        image_size=len(image.image)
     )
 
 

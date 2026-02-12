@@ -60,7 +60,3 @@ class BlueprintsCRUD:
         """Удаление всех чертежей для записи"""
         result = await self.collection.delete_many({"blueprint_id_sql": blueprint_id_sql})
         return result.deleted_count
-    
-    async def get_all(self) -> List[dict]:
-        """Получение всех чертежей"""
-        return [doc async for doc in self.collection.find({})]

@@ -13,10 +13,9 @@ router = APIRouter(prefix="/files_blueprints", tags=["FilesBlueprints"])
 async def upload_blueprint(
     file: UploadFile = File(...),
     blueprint_id_sql: int = Query(..., gt=0),
-    service: BlueprintsService = Depends(get_blueprints_service)  # ← Внедряем сервис
+    service: BlueprintsService = Depends(get_blueprints_service)
 ):
     """Загрузка чертежа"""
-    # ✅ Работаем через сервис
     blueprint = await service.upload_blueprint(file, blueprint_id_sql)
     
     return BlueprintResponse(
@@ -45,6 +44,21 @@ async def download_blueprint(
         headers={"Content-Disposition": f'inline; filename="{safe_filename}"'}
     )
 
+@router.get("/{blueprint_id}/info")
+async def get_blueprint_info(
+    blueprint_id: str,
+    service: BlueprintsService = Depends(get_blueprints_service)
+):
+    """Получение информации об изображении без скачивания"""
+    bp = await service.get_blueprint(blueprint_id)
+    return BlueprintResponse(
+        id=bp.id,
+        blueprint_id_sql=bp.blueprint_id_sql,
+        filename=bp.filename,
+        content_type=bp.content_type,
+        created_at=bp.created_at,
+        image_size=len(bp.image) if bp.image else 0
+    )
 
 @router.get("/", response_model=List[BlueprintResponse])
 async def get_all_blueprints_images(

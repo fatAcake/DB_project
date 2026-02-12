@@ -1,7 +1,7 @@
 from db.session import init_db_on_start_up
 from fastapi import FastAPI
-from api.routers.products_images import router as P_router
-from api.routers.blueprints_images import router as B_router
+from api.routers.nosql.products_images import router as P_router
+from api.routers.nosql.blueprints_images import router as B_router
 import uvicorn
 
 try:

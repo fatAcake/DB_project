@@ -2,11 +2,11 @@ from datetime import datetime
 from sqlalchemy import Boolean, DateTime, Integer, Numeric, String, ForeignKey, BigInteger, Text, JSON
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 from typing import Optional
-import json
+
 class Base(DeclarativeBase):
     pass
 
-class Roles(Base):
+class Roles(Base): # КАРПЕЧИН
     __tablename__ = "roles"
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     name: Mapped[str] = mapped_column(String(255), nullable=False, unique=True)
@@ -15,7 +15,7 @@ class Roles(Base):
 
     role: Mapped["Users"] = relationship(back_populates="user", cascade="all, delete-orphan")
 
-class Users(Base):  
+class Users(Base): # КАРПЕЧИН
     __tablename__ = "users"
     id: Mapped[int] = mapped_column(BigInteger, primary_key=True)
     first_name: Mapped[str] = mapped_column(String(255), nullable=False)
@@ -35,7 +35,7 @@ class Users(Base):
     transaction_user: Mapped["Transactions"] = relationship(back_populates="user", 
                                                             cascade="all, delete-orphan")
 
-class PassportsData(Base):
+class PassportsData(Base): # ТЕРИХОВ
     __tablename__ = "passportsdata"
     id: Mapped[int] = mapped_column(BigInteger, primary_key=True)
     first_name: Mapped[str] = mapped_column(String(255), nullable=False)
@@ -55,7 +55,7 @@ class PassportsData(Base):
     user: Mapped["Users"] = relationship(back_populates="passport_data", 
                                          cascade="all, delete-orphan")
     
-class Logs(Base):
+class Logs(Base): # ТЕРИХОВ
     __tablename__ = "logs"
     id: Mapped[int] = mapped_column(BigInteger, primary_key=True)
     lead_time: Mapped[datetime] = mapped_column(DateTime, default=datetime.now)
@@ -67,13 +67,13 @@ class Logs(Base):
     user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False)
     user: Mapped["Users"] = relationship(back_populates="log_user", cascade="all, delete-orphan") 
 
-class Blueprints(Base):
+class Blueprints(Base): # МОТРЯ
     __tablename__ = "blueprints"
     id: Mapped[int] = mapped_column(BigInteger, primary_key=True)
     name: Mapped[str] = mapped_column(String(255), nullable=False)
     description: Mapped[str] = mapped_column(String(400), nullable=False)
 
-class Products(Base):
+class Products(Base): # МОТРЯ
     __tablename__ = "products"
     id: Mapped[int] = mapped_column(BigInteger, primary_key=True)
     description: Mapped[str] = mapped_column(String(255), nullable=False)
