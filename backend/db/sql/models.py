@@ -9,16 +9,15 @@ class Base(DeclarativeBase):
 
 
 class Roles(Base):
-    __tablename__ = "roles"  # ← ДОБАВЬТЕ __ перед tablename!
+    __tablename__ = "roles"
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     name: Mapped[str] = mapped_column(String(255), nullable=False, unique=True)
     created_at: Mapped[datetime] = mapped_column(DateTime, nullable=False, default=datetime.now)
     updated_at: Mapped[datetime] = mapped_column(DateTime, nullable=True)
-    # ✅ УДАЛЕНО: все relationship
 
 
 class Users(Base):
-    __tablename__ = "users"  # ← ДОБАВЬТЕ __ перед tablename!
+    __tablename__ = "users"
     id: Mapped[int] = mapped_column(BigInteger, primary_key=True)
     first_name: Mapped[str] = mapped_column(String(255), nullable=False)
     last_name: Mapped[str] = mapped_column(String(255), nullable=False)
@@ -32,7 +31,7 @@ class Users(Base):
 
 
 class PassportsData(Base):
-    __tablename__ = "passportsdata"  # ← ДОБАВЬТЕ __ перед tablename!
+    __tablename__ = "passportsdata"
     id: Mapped[int] = mapped_column(BigInteger, primary_key=True)
     first_name: Mapped[str] = mapped_column(String(255), nullable=False)
     last_name: Mapped[str] = mapped_column(String(255), nullable=False)
@@ -50,7 +49,7 @@ class PassportsData(Base):
 
 
 class Logs(Base):
-    __tablename__ = "logs"  # ← ДОБАВЬТЕ __ перед tablename!
+    __tablename__ = "logs"
     id: Mapped[int] = mapped_column(BigInteger, primary_key=True)
     lead_time: Mapped[datetime] = mapped_column(DateTime, default=datetime.now)
     system: Mapped[str] = mapped_column(String(255), nullable=False)
@@ -62,28 +61,28 @@ class Logs(Base):
 
 
 class Blueprints(Base):
-    __tablename__ = "blueprints"  # ← ДОБАВЬТЕ __ перед tablename!
+    __tablename__ = "blueprints"
     id: Mapped[int] = mapped_column(BigInteger, primary_key=True)
     name: Mapped[str] = mapped_column(String(255), nullable=False)
     description: Mapped[str] = mapped_column(String(400), nullable=False)
 
 
 class Products(Base):
-    __tablename__ = "products"  # ← ДОБАВЬТЕ __ перед tablename!
+    __tablename__ = "products"
     id: Mapped[int] = mapped_column(BigInteger, primary_key=True)
     description: Mapped[str] = mapped_column(String(255), nullable=False)
     price: Mapped[float] = mapped_column(Numeric, nullable=False)
 
 
 class QuantityProducts(Base):
-    __tablename__ = "quantity_products"  # ← ДОБАВЬТЕ __ перед tablename!
+    __tablename__ = "quantity_products"
     id: Mapped[int] = mapped_column(BigInteger, primary_key=True)
     count: Mapped[int] = mapped_column(Integer, nullable=False)
     product_id: Mapped[int] = mapped_column(ForeignKey("products.id"), nullable=False, unique=True)
 
 
 class Transactions(Base):
-    __tablename__ = "transactions"  # ← ДОБАВЬТЕ __ перед tablename!
+    __tablename__ = "transactions"
     id: Mapped[int] = mapped_column(BigInteger, primary_key=True)
     sum: Mapped[float] = mapped_column(Numeric, nullable=False)
     card_data: Mapped[dict] = mapped_column(JSON, nullable=False)
@@ -93,9 +92,13 @@ class Transactions(Base):
 
 
 class ConfirmPasspotrData(Base):
-    __tablename__ = "confirm_passport_data"  # ← ДОБАВЬТЕ __ перед tablename!
+    __tablename__ = "confirm_passport_data"
     id: Mapped[int] = mapped_column(BigInteger, primary_key=True)
     passport_data_id: Mapped[int] = mapped_column(ForeignKey("passportsdata.id"), nullable=False)
     is_confirm: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
 
-# TODO сделать таблицу фитбеков пользователей
+class Feedback(Base):
+    __tablename__ = "feedback"
+    id: Mapped[int] = mapped_column(BigInteger, primary_key=True)
+    message: Mapped[str] = mapped_column(String, nullable=False)
+    user_id: Mapped["Users"] = mapped_column(ForeignKey("users.id"), nullable=False)

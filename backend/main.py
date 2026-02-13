@@ -3,6 +3,7 @@ from fastapi import FastAPI
 from api.routers.nosql.products_images import router as P_router
 from api.routers.nosql.blueprints_images import router as B_router
 from api.routers.products import router as product_router
+from api.routers.quantity_products import router as qp_router
 import uvicorn
 
 try:
@@ -15,6 +16,7 @@ try:
     app.include_router(P_router)
     app.include_router(B_router)
     app.include_router(product_router)
+    app.include_router(qp_router)
     if __name__ == "__main__":
         uvicorn.run(app, host="0.0.0.0", port=8000)
 

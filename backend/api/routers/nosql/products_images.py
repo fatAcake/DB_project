@@ -184,7 +184,7 @@ async def delete_product_image(
     if not success:
         raise HTTPException(404, "Image not found")
     
-    return {"message": "Image deleted successfully"}
+    return {"message": "Image deleted successfully", "status_code": 200}
 
 
 @router.delete("/{product_id_sql}/images")
@@ -194,4 +194,4 @@ async def delete_all_product_images(
 ):
     """Удаление всех изображений продукта"""
     count = await service.delete_product_images(product_id_sql)
-    return {"deleted_count": count}
+    return {"deleted_count": count, "status_code": 200}
