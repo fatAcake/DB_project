@@ -1,3 +1,6 @@
+import json
+import logging
+from sqlalchemy import inspect
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
 from motor.motor_asyncio import AsyncIOMotorClient
@@ -14,8 +17,25 @@ AsyncSessionLocalPostgres = sessionmaker(
 )
 
 async def init_postgres_db():
+    """Инициализация базы данных PostgreSQL"""
+    logger = logging.getLogger("uvicorn")
+    
     async with async_postgres_engine.begin() as conn:
-        await conn.run_sync(SQLBase.metadata.create_all)
+        def check_tables_sync(connection):
+            inspector = inspect(connection)
+            return set(inspector.get_table_names())
+        
+        existing_tables = await conn.run_sync(check_tables_sync)
+        metadata_tables = set(SQLBase.metadata.tables.keys())
+        missing_tables = metadata_tables - existing_tables
+        
+        if not missing_tables:
+            logger.info(f"БД: все таблицы существуют ({len(existing_tables)}/{len(metadata_tables)})")
+        else:
+            logger.info(f"БД: создание {len(missing_tables)} таблиц")
+            await conn.run_sync(SQLBase.metadata.create_all)
+            logger.info("БД: таблицы созданы")
+
 
 async def get_postgres_db():
     async with AsyncSessionLocalPostgres() as session:
