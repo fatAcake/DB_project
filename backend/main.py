@@ -10,6 +10,10 @@ from api.routers.nosql.products_images import router as P_router
 from api.routers.nosql.blueprints_images import router as B_router
 from api.routers.products import router as product_router
 from api.routers.quantity_products import router as qp_router
+from api.routers.blueprints_router import router as blueprint_router
+from api.routers.transactions import router as transaction_router
+from api.routers.feedback import router as feedback_router
+from api.routers.confirm_passport_data import router as cpd_router
 import uvicorn
 
 try:
@@ -27,6 +31,10 @@ try:
 
     app.include_router(product_router)
     app.include_router(qp_router)
+    app.include_router(blueprint_router)
+    app.include_router(transaction_router)
+    app.include_router(feedback_router)
+    app.include_router(cpd_router)
     if __name__ == "__main__":
         uvicorn.run(app, host="0.0.0.0", port=8000)
 

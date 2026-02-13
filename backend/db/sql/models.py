@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 from sqlalchemy import Boolean, DateTime, Integer, Numeric, String, ForeignKey, BigInteger, Text, JSON
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 from typing import Optional
@@ -86,12 +86,19 @@ class Transactions(Base):
     id: Mapped[int] = mapped_column(BigInteger, primary_key=True)
     sum: Mapped[float] = mapped_column(Numeric, nullable=False)
     card_data: Mapped[dict] = mapped_column(JSON, nullable=False)
-    created_at: Mapped[datetime] = mapped_column(DateTime, nullable=False, default=datetime.now)
-    updated_at: Mapped[datetime] = mapped_column(DateTime, nullable=True)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        nullable=False, 
+        default=lambda: datetime.now(timezone.utc)
+    )
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        nullable=True
+    )
     user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False)
 
 
-class ConfirmPasspotrData(Base):
+class ConfirmPassportData(Base): 
     __tablename__ = "confirm_passport_data"
     id: Mapped[int] = mapped_column(BigInteger, primary_key=True)
     passport_data_id: Mapped[int] = mapped_column(ForeignKey("passportsdata.id"), nullable=False)
