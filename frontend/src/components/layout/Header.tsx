@@ -5,9 +5,11 @@ import { motion, AnimatePresence } from 'framer-motion'
 import NavLink from '../navigation/NavLink'
 import NavGroup from '../navigation/NavGroup'
 import { useAuthStore } from '@/store/useAuthStore'
+import { useCartStore } from '@/store/useCartStore'
 
 const Header = () => {
   const { isAuthenticated, user, logout } = useAuthStore()
+  const cartCount = useCartStore((s) => s.getItemCount())
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false)
   const [isSearchOpen, setIsSearchOpen] = useState(false)
@@ -105,7 +107,7 @@ const Header = () => {
             >
               <ShoppingCart size={18} />
               <span className="absolute -top-1 -right-1 bg-white text-black text-xs w-5 h-5 flex items-center justify-center border border-black font-bold rounded-full">
-                0
+                {cartCount}
               </span>
             </Link>
 

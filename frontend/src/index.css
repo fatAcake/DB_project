@@ -5,8 +5,13 @@
 
 @layer base {
   body {
-    @apply bg-white text-gray-900;
+    @apply text-gray-900;
     font-family: 'Unbounded', sans-serif;
+    /* фон задаётся компонентом BackgroundAnimation в Layout */
+    background: transparent;
+  }
+  html {
+    background: #e8e8e8;
   }
   
   /* Минималистичный стиль для темной темы */
@@ -63,5 +68,18 @@
   .product-carousel .swiper-pagination-bullet-active {
     background: #000000 !important;
     opacity: 1 !important;
+  }
+
+  /* Пульсирующий градиент на фоне — заметная анимация */
+  @keyframes gradient-pulse {
+    0%, 100% {
+      opacity: 0.5;
+    }
+    50% {
+      opacity: 1;
+    }
+  }
+  .animate-gradient-pulse {
+    animation: gradient-pulse 6s ease-in-out infinite;
   }
 }
