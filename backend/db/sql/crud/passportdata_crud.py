@@ -6,7 +6,7 @@ from db.sql.models import PassportsData
 
 class PassportDataCRUD:
     async def create(self, db: AsyncSession, passport_data: dict) -> PassportsData:
-        db_passport = PassportsData(**passport_data)
+        db_passport = PassportsData(**passport_data) # TODO сделать обновление пользователя на имя, фамилию и отчество и добавить этого пользователя в таблицу ConfirmPassportData для подтверждения личности
         db.add(db_passport)
         await db.commit()
         await db.refresh(db_passport)
