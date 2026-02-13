@@ -146,7 +146,7 @@ async def delete_blueprint(
     if not success:
         raise HTTPException(404, "Blueprint not found")
 
-    return {"message": "Blueprint deleted successfully"}
+    return {"message": "Blueprint deleted successfully", "status_code": 200}
 
 
 @router.delete("/sql/{blueprint_id_sql}")
@@ -156,4 +156,4 @@ async def delete_all_blueprints(
 ):
     """Удаление всех чертежей для записи"""
     count = await service.delete_blueprint_versions(blueprint_id_sql)
-    return {"deleted_count": count}
+    return {"deleted_count": count, "status_code": 200}

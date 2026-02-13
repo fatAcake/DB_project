@@ -28,27 +28,31 @@ class ProductsService:
     
     async def get_by_id(self, product_id: int) -> ProductInfo:
         """Получение продукта по ID"""
-        product = await get_product(self.session, product_id)
+        product, qp = await get_product(self.session, product_id)
         if not product:
             raise HTTPException(404, "Product not found")
         
         return ProductInfo(
             id=product.id,
             description=product.description,
-            price=product.price
+            price=product.price,
+            count=qp.count
         )
     
     async def get_all(self, skip: int = 0, limit: int = 100) -> List[ProductInfo]:
-        """Получение списка продуктов"""
-        products = await get_products(self.session, skip, limit)
+        """Получение списка продуктов с количеством"""
+        products, qps = await get_products(self.session, skip, limit)
         if not products:
             raise HTTPException(404, "No products found")
+        
+        quantity_dict = {qp.product_id: qp.count for qp in qps}
         
         return [
             ProductInfo(
                 id=product.id,
                 description=product.description,
-                price=product.price
+                price=product.price,
+                count=str(quantity_dict.get(product.id, None))
             )
             for product in products
         ]

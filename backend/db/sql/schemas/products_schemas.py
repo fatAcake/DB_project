@@ -22,6 +22,7 @@ class ProductUpdate(ProductBase):
 class ProductInfo(ProductBase):
     """Схема для ответа с информацией о продукте"""
     id: int = Field(..., description="ID продукта")
+    count: Optional[int] = None
     
     class Config:
         from_attributes = True  

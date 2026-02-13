@@ -9,7 +9,6 @@ from db.sql.schemas.products_schemas import ProductCreate, ProductUpdate, Produc
 
 router = APIRouter(prefix="/products", tags=["Products"])
 
-
 @router.post("/", response_model=ProductInfo)
 async def create_product(
     data: ProductCreate,
@@ -60,4 +59,4 @@ async def delete_product(
     """Удаление продукта"""
     service = ProductsService(session)
     await service.delete(product_id)
-    return {"message": "Product deleted successfully", "product_id": product_id}
+    return {"message": "Product deleted successfully", "product_id": product_id, "status_code": 200}
