@@ -76,6 +76,8 @@ class ProductImageCreate(BaseModel):
 class ProductImageResponse(ProductImageBase):
     """Модель для ответа API (без бинарных данных)"""
     image_size: int
+    description: Optional[str] = None
+    price: Optional[float] = None
 
 
 # === Blueprints ===
@@ -122,3 +124,5 @@ class BlueprintCreate(BaseModel):
 class BlueprintResponse(BlueprintBase):
     """Модель для ответа API (без бинарных данных)"""
     image_size: int
+    description: Optional[str] = None
+    name: Optional[str] = None
