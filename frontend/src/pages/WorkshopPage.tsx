@@ -8,6 +8,9 @@ import {
   Layers,
   Wrench,
 } from 'lucide-react'
+import { useBlueprints } from '@/api/blueprints'
+import LoadingSpinner from '@/components/common/LoadingSpinner'
+import ErrorMessage from '@/components/common/ErrorMessage'
 
 const steps = [
   {
@@ -27,13 +30,9 @@ const steps = [
   },
 ]
 
-const comingSoonItems = [
-  { name: 'Антистресс-кубик', format: 'STL', size: '~2 MB' },
-  { name: 'Спиннер-звезда', format: 'STL', size: '~1.5 MB' },
-  { name: 'Поп-ит фиджет', format: 'STL', size: '~3 MB' },
-]
-
 const WorkshopPage = () => {
+  const { data: blueprints = [], isLoading, isError, error } = useBlueprints()
+
   return (
     <div className="min-h-screen">
       {/* Hero */}
@@ -102,7 +101,7 @@ const WorkshopPage = () => {
         </div>
       </section>
 
-      {/* Карточки «скоро» */}
+      {/* Чертежи и модели из API */}
       <section className="py-14 lg:py-20">
         <div className="max-w-5xl mx-auto px-4">
           <p className="font-unbounded text-sm uppercase tracking-[0.2em] text-black/50 mb-2">
@@ -111,10 +110,18 @@ const WorkshopPage = () => {
           <h2 className="text-2xl lg:text-3xl font-bold font-unbounded text-black mb-8">
             Чертежи и модели
           </h2>
+          {isLoading && (
+            <div className="flex justify-center py-12">
+              <LoadingSpinner />
+            </div>
+          )}
+          {isError && (
+            <ErrorMessage message={(error as Error)?.message || 'Не удалось загрузить чертежи'} />
+          )}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            {comingSoonItems.map(({ name, format, size }) => (
+            {blueprints.map((bp) => (
               <div
-                key={name}
+                key={bp.id}
                 className="group flex items-center gap-4 p-5 rounded-2xl border-2 border-black/10 bg-white/60 hover:border-black/20 hover:bg-white/80 transition-all"
               >
                 <div className="w-12 h-12 rounded-xl bg-black/5 flex items-center justify-center group-hover:bg-black/10 transition-colors">
@@ -122,14 +129,14 @@ const WorkshopPage = () => {
                 </div>
                 <div className="min-w-0 flex-1">
                   <h3 className="font-unbounded font-semibold text-black truncate">
-                    {name}
+                    {bp.name}
                   </h3>
-                  <p className="text-sm text-black/55">
-                    {format} · {size}
+                  <p className="text-sm text-black/55 line-clamp-2">
+                    {bp.description || 'STL · для 3D-печати'}
                   </p>
                 </div>
                 <span className="font-unbounded text-xs font-semibold text-black/50 bg-black/5 px-2.5 py-1 rounded-lg">
-                  Скоро
+                  Модель
                 </span>
               </div>
             ))}

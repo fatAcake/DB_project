@@ -1,13 +1,15 @@
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { Navigation, Pagination } from 'swiper/modules'
 import { Link } from 'react-router-dom'
-import { mockProducts } from '@/data/mockProducts'
+import { useProducts } from '@/api/products'
 import 'swiper/css'
 import 'swiper/css/navigation'
 import 'swiper/css/pagination'
 
 const ProductCarousel = () => {
-  const displayProducts = mockProducts
+  const { data: displayProducts = [] } = useProducts()
+
+  if (displayProducts.length === 0) return null
 
   return (
     <div className="w-full">

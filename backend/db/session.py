@@ -75,4 +75,8 @@ async def close_mongo_connection():
 
 async def init_db_on_start_up():
     await init_postgres_db()
+    from db.seed_data import seed_db
+    await seed_db()
     await init_mongo_db()
+    from db.seed_mongo import seed_mongo
+    await seed_mongo()

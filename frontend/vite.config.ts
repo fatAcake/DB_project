@@ -19,10 +19,10 @@ export default defineConfig({
         changeOrigin: true,
         secure: false,
         ws: true,
+        rewrite: (path) => path.replace(/^\/api/, ''),
         configure: (proxy, _options) => {
-          proxy.on('error', (err, _req, _res) => {
-            // Игнорируем ошибки подключения к бэкенду
-            console.log('Backend не запущен, используются моковые данные')
+          proxy.on('error', () => {
+            console.log('Backend не запущен')
           })
         },
       },

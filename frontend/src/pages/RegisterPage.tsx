@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Mail, Lock, User, ArrowRight, CheckCircle } from 'lucide-react'
+import { useRegister } from '@/api/auth'
 
 const steps = [
   { num: 1, label: 'Регистрация', active: true },
@@ -13,11 +14,17 @@ const RegisterPage = () => {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const register = useRegister()
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    // TODO: интеграция с API регистрации
-    navigate('/')
+    register.mutate(
+      { name, email, password },
+      {
+        onSuccess: () => navigate('/'),
+        onError: () => {},
+      }
+    )
   }
 
   return (
@@ -146,11 +153,17 @@ const RegisterPage = () => {
                 </div>
                 <p className="mt-1 text-xs text-black/50">Минимум 8 символов</p>
               </div>
+              {register.isError && (
+                <p className="text-sm text-red-600">
+                  {(register.error as Error)?.message || 'Ошибка регистрации'}
+                </p>
+              )}
               <button
                 type="submit"
-                className="w-full font-unbounded font-semibold bg-black text-white rounded-2xl py-3.5 hover:bg-black/90 transition-colors flex items-center justify-center gap-2"
+                disabled={register.isPending}
+                className="w-full font-unbounded font-semibold bg-black text-white rounded-2xl py-3.5 hover:bg-black/90 disabled:opacity-50 transition-colors flex items-center justify-center gap-2"
               >
-                Создать аккаунт
+                {register.isPending ? 'Создание…' : 'Создать аккаунт'}
                 <ArrowRight size={20} />
               </button>
             </form>
