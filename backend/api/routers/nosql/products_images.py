@@ -21,7 +21,7 @@ async def get_product_info_from_query(
     """Зависимость для получения информации о продукте из Query параметра"""
     from db.sql.crud.products_crud import get_product
     
-    product = await get_product(session, product_id_sql)
+    product, _ = await get_product(session, product_id_sql)
     if not product:
         raise HTTPException(404, "Product not found")
     
@@ -39,7 +39,7 @@ async def get_product_info_from_path(
     """Зависимость для получения информации о продукте из Path параметра"""
     from db.sql.crud.products_crud import get_product
     
-    product = await get_product(session, product_id_sql)
+    product, _ = await get_product(session, product_id_sql)
     if not product:
         raise HTTPException(404, "Product not found")
     
