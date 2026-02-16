@@ -43,16 +43,16 @@ class ProductsService:
         """Получение списка продуктов с количеством"""
         products, qps = await get_products(self.session, skip, limit)
         if not products:
-            raise HTTPException(404, "No products found")
-        
+            return []
+
         quantity_dict = {qp.product_id: qp.count for qp in qps}
-        
+
         return [
             ProductInfo(
                 id=product.id,
                 description=product.description,
                 price=product.price,
-                count=str(quantity_dict.get(product.id, None))
+                count=quantity_dict.get(product.id),
             )
             for product in products
         ]

@@ -42,8 +42,7 @@ class BlueprintsService:
         """Получение списка чертежей"""
         blueprints = await get_blueprints(self.session, skip, limit)
         if not blueprints:
-            raise HTTPException(404, "No blueprints found")
-        
+            return []
         return [
             BlueprintInfo(
                 id=blueprint.id,
