@@ -1,8 +1,6 @@
 from db.session import init_db_on_start_up
 from fastapi import FastAPI
-
-from api.routers.nosql.products_images import router as P_router
-from api.routers.nosql.blueprints_images import router as B_router
+from fastapi.middleware.cors import CORSMiddleware
 from api.routers.logs_router import router as logs_router
 from api.routers.passportdata_router import router as passportdata_router
 
@@ -19,10 +17,18 @@ import uvicorn
 try:
     app = FastAPI(on_startup=[init_db_on_start_up],
                 on_shutdown=[])
-
-    # TODO Добавить импорты роутеров
-
-    # EXEMPLE: app.include_router(router)
+    app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:3000",  
+        "http://localhost:5173",   
+        "http://127.0.0.1:3000",
+        "http://127.0.0.1:5173",
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"], 
+)
     app.include_router(P_router)
     app.include_router(B_router)
 
