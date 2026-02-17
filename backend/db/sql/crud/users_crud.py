@@ -1,9 +1,12 @@
 from datetime import datetime
+import random
 from typing import Optional, List
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from db.sql.models import Users
 from db.sql.schemas.users_schemas import UserCreate, UserUpdate
+from services.binders_methods.binders_users import send_confirmation_email
+from core.data import users_data
 
 
 async def create_user(session: AsyncSession, data: UserCreate) -> Optional[Users]:
@@ -16,11 +19,19 @@ async def create_user(session: AsyncSession, data: UserCreate) -> Optional[Users
             email=data.email,
             hash_password=data.hash_password,
             role_id=data.role_id,
-            is_acive=data.is_acive,
+            is_acive=False,
         )
         session.add(user)
         await session.commit()
         await session.refresh(user)
+        
+        verification_code = random.randint(100000, 999999)
+
+        if await send_confirmation_email(user.email, 
+            f"{user.first_name} {user.last_name} {user.father_name}", 
+            verification_code) == True:
+            users_data[user.id] = verification_code
+
         return user
     except Exception:
         await session.rollback()
@@ -85,3 +96,40 @@ async def delete_user(session: AsyncSession, user_id: int) -> bool:
     await session.delete(user)
     await session.commit()
     return True
+
+async def save_verification_code(user_id: int, code: int) -> None:
+    """Сохранить код верификации в хранилище"""
+    users_data[user_id] = code
+
+
+async def get_verification_code(user_id: int) -> Optional[int]:
+    """Получить код верификации из хранилища"""
+    return users_data.get(user_id)
+
+
+async def delete_verification_code(user_id: int) -> bool:
+    """Удалить код верификации из хранилища"""
+    if user_id in users_data:
+        del users_data[user_id]
+        return True
+    return False
+
+
+async def verify_user_code(user_id: int, code: int) -> bool:
+    """Проверить код верификации"""
+    stored_code = await get_verification_code(user_id)
+    if stored_code is None:
+        return False
+    return stored_code == code
+
+
+async def activate_user(session: AsyncSession, user_id: int) -> Optional[Users]:
+    """Активировать пользователя"""
+    user = await get_user(session, user_id)
+    if not user:
+        return None
+    user.is_acive = True
+    user.updated_at = datetime.now()
+    await session.commit()
+    await session.refresh(user)
+    return user
