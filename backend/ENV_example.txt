@@ -1,0 +1,16 @@
+# Скопируйте в .env и при необходимости измените значения
+# ============ PostgreSQL ============
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=your_password
+POSTGRES_DB=union_db
+POSTGRES_HOST=localhost
+POSTGRES_PORT=5432
+
+# ============ MongoDB ============
+MONGO_DB=union_db
+MONGO_HOST=localhost
+MONGO_PORT=27017
+
+# ============ Приложение ============
+DEBUG=false
+ECHO=false

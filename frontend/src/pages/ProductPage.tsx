@@ -1,18 +1,26 @@
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { ArrowLeft, ShoppingCart, Package, Minus, Plus } from 'lucide-react'
-import { getProductById } from '@/data/mockProducts'
+import { useProduct, useProductImageIds, getProductImageUrl } from '@/api/products'
 import { useCartStore } from '@/store/useCartStore'
+import LoadingSpinner from '@/components/common/LoadingSpinner'
+import ErrorMessage from '@/components/common/ErrorMessage'
 
 const ProductPage = () => {
   const { id } = useParams<{ id: string }>()
   const [quantity, setQuantity] = useState(1)
   const addToCart = useCartStore((s) => s.addItem)
+  const productId = id ? parseInt(id, 10) : undefined
 
-  const productId = id ? parseInt(id, 10) : NaN
-  const product = !isNaN(productId) ? getProductById(productId) : undefined
+  const { data: product, isLoading, isError, error } = useProduct(productId)
+  const { data: imageIds = [] } = useProductImageIds(productId)
+  const imageUrl = useMemo(
+    () => (imageIds[0] ? getProductImageUrl(imageIds[0]) : null),
+    [imageIds]
+  )
+  const displayImage = imageUrl || product?.image || '/placeholder-product.jpg'
 
-  if (!product) {
+  if (productId == null || isNaN(productId)) {
     return (
       <div className="max-w-4xl mx-auto py-12 text-center">
         <h1 className="text-2xl font-unbounded font-bold text-black mb-4">
@@ -29,11 +37,34 @@ const ProductPage = () => {
     )
   }
 
+  if (isLoading) {
+    return (
+      <div className="max-w-6xl mx-auto py-12 flex justify-center">
+        <LoadingSpinner />
+      </div>
+    )
+  }
+
+  if (isError || !product) {
+    return (
+      <div className="max-w-4xl mx-auto py-12">
+        <ErrorMessage message={(error as Error)?.message || 'Товар не найден'} />
+        <Link
+          to="/catalog"
+          className="inline-flex items-center gap-2 font-unbounded text-black border-2 border-black rounded-2xl px-5 py-2.5 hover:bg-black hover:text-white transition-colors mt-4"
+        >
+          <ArrowLeft size={18} />
+          В каталог
+        </Link>
+      </div>
+    )
+  }
+
   const incrementQty = () => setQuantity((q) => Math.min(q + 1, 99))
   const decrementQty = () => setQuantity((q) => Math.max(q - 1, 1))
 
   const handleAddToCart = () => {
-    addToCart(product.id, quantity)
+    addToCart(product, quantity)
   }
 
   return (
@@ -50,7 +81,7 @@ const ProductPage = () => {
         {/* Изображение */}
         <div className="bg-gray-900 border border-gray-700 rounded-2xl overflow-hidden aspect-square max-h-[500px] lg:max-h-none">
           <img
-            src={product.image || '/placeholder-product.jpg'}
+            src={displayImage}
             alt={product.name}
             className="w-full h-full object-cover"
             onError={(e) => {

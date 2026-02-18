@@ -1,39 +1,24 @@
 import { create } from 'zustand'
-import { CartItem } from '@/types'
-import { getProductById } from '@/data/mockProducts'
+import { CartItem, Product } from '@/types'
 
 interface CartState {
   items: CartItem[]
-  addItem: (productId: number, quantity?: number) => void
+  addItem: (product: Product, quantity?: number) => void
   removeItem: (productId: number) => void
   updateQuantity: (productId: number, quantity: number) => void
   getItemCount: () => number
   getTotalPrice: () => number
 }
 
-const getInitialItems = (): CartItem[] => {
-  const p1 = getProductById(1)
-  const p2 = getProductById(2)
-  const p4 = getProductById(4)
-  if (!p1 || !p2 || !p4) return []
-  return [
-    { product: p1, quantity: 2 },
-    { product: p2, quantity: 1 },
-    { product: p4, quantity: 1 },
-  ]
-}
-
 export const useCartStore = create<CartState>((set, get) => ({
-  items: getInitialItems(),
+  items: [],
 
-  addItem: (productId, quantity = 1) => {
-    const product = getProductById(productId)
-    if (!product) return
+  addItem: (product, quantity = 1) => {
     set((state) => {
-      const existing = state.items.find((i) => i.product.id === productId)
+      const existing = state.items.find((i) => i.product.id === product.id)
       const next = existing
         ? state.items.map((i) =>
-            i.product.id === productId
+            i.product.id === product.id
               ? { ...i, quantity: i.quantity + quantity }
               : i
           )

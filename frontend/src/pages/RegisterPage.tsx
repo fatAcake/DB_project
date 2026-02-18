@@ -324,9 +324,10 @@ const RegisterPage = () => {
               )}
               <button
                 type="submit"
-                className="w-full font-unbounded font-semibold bg-black text-white rounded-2xl py-3.5 hover:bg-black/90 transition-colors flex items-center justify-center gap-2"
+                disabled={register.isPending}
+                className="w-full font-unbounded font-semibold bg-black text-white rounded-2xl py-3.5 hover:bg-black/90 disabled:opacity-50 transition-colors flex items-center justify-center gap-2"
               >
-                Создать аккаунт
+                {register.isPending ? 'Создание…' : 'Создать аккаунт'}
                 <ArrowRight size={20} />
               </button>
             </form>
