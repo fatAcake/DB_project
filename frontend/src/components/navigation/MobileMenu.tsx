@@ -11,7 +11,6 @@ const MobileMenu = () => {
   const navItems = [
     { to: '/', label: 'Главная' },
     { to: '/catalog', label: 'Каталог' },
-    { to: '/feedback', label: 'Обратная связь' },
   ]
 
   return (

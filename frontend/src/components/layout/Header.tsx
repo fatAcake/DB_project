@@ -5,9 +5,11 @@ import { motion, AnimatePresence } from 'framer-motion'
 import NavLink from '../navigation/NavLink'
 import NavGroup from '../navigation/NavGroup'
 import { useAuthStore } from '@/store/useAuthStore'
+import { useCartStore } from '@/store/useCartStore'
 
 const Header = () => {
   const { isAuthenticated, user, logout } = useAuthStore()
+  const cartCount = useCartStore((s) => s.getItemCount())
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false)
   const [isSearchOpen, setIsSearchOpen] = useState(false)
@@ -30,7 +32,7 @@ const Header = () => {
   return (
     <header className="bg-black text-white sticky top-0 z-50">
       <div className="container mx-auto px-4 lg:px-8">
-        <nav className="flex items-center justify-between h-20">
+        <nav className="flex items-center justify-between h-20 relative">
           {/* Logo - Left */}
           <Link
             to="/"
@@ -61,8 +63,8 @@ const Header = () => {
             </span>
           </Link>
 
-          {/* Desktop Navigation - Right with grouped buttons */}
-          <div className="hidden lg:flex items-center">
+          {/* Desktop Navigation - Centered */}
+          <div className="hidden lg:flex items-center absolute left-1/2 transform -translate-x-1/2">
             <NavGroup items={navItems.slice(1)} />
           </div>
 
@@ -105,7 +107,7 @@ const Header = () => {
             >
               <ShoppingCart size={18} />
               <span className="absolute -top-1 -right-1 bg-white text-black text-xs w-5 h-5 flex items-center justify-center border border-black font-bold rounded-full">
-                0
+                {cartCount}
               </span>
             </Link>
 
@@ -116,15 +118,15 @@ const Header = () => {
               </NavLink>
             )}
 
-            {/* User menu */}
+            {/* User menu: аватар + выпадающее меню (профиль, выход) */}
             {isAuthenticated && (
               <div className="relative">
                 <button
                   onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-                  className="p-2 text-white hover:bg-white hover:text-black transition-colors border border-white rounded-2xl uppercase text-sm font-semibold"
-                  aria-label="User menu"
+                  className="flex items-center justify-center w-10 h-10 rounded-2xl bg-white text-black border border-white font-unbounded font-bold text-sm hover:bg-black hover:text-white hover:border-white transition-colors"
+                  aria-label="Профиль"
                 >
-                  <User size={18} />
+                  {user?.name?.charAt(0)?.toUpperCase() ?? '?'}
                 </button>
 
                 <AnimatePresence>
@@ -143,36 +145,36 @@ const Header = () => {
                         <Link
                           to="/profile"
                           onClick={() => setIsUserMenuOpen(false)}
-                          className="flex items-center space-x-3 px-4 py-2 hover:bg-black hover:text-white transition-colors uppercase text-sm font-semibold"
+                          className="flex items-center space-x-3 px-4 py-2 text-black hover:bg-black hover:text-white transition-colors uppercase text-sm font-semibold"
                         >
                           <User size={18} />
-                          <span>PROFILE</span>
+                          <span>Профиль</span>
                         </Link>
                         <Link
                           to="/profile/orders"
                           onClick={() => setIsUserMenuOpen(false)}
-                          className="flex items-center space-x-3 px-4 py-2 hover:bg-black hover:text-white transition-colors uppercase text-sm font-semibold"
+                          className="flex items-center space-x-3 px-4 py-2 text-black hover:bg-black hover:text-white transition-colors uppercase text-sm font-semibold"
                         >
                           <Package size={18} />
-                          <span>ORDERS</span>
+                          <span>Заказы</span>
                         </Link>
                         {user?.role === 'admin' && (
                           <Link
                             to="/admin"
                             onClick={() => setIsUserMenuOpen(false)}
-                            className="flex items-center space-x-3 px-4 py-2 hover:bg-black hover:text-white transition-colors uppercase text-sm font-semibold"
+                            className="flex items-center space-x-3 px-4 py-2 text-black hover:bg-black hover:text-white transition-colors uppercase text-sm font-semibold"
                           >
                             <Settings size={18} />
-                            <span>ADMIN</span>
+                            <span>Админ</span>
                           </Link>
                         )}
                         <div className="border-t border-black my-2" />
                         <button
                           onClick={handleLogout}
-                          className="w-full flex items-center space-x-3 px-4 py-2 hover:bg-black hover:text-white transition-colors text-red-600 uppercase text-sm font-semibold"
+                          className="w-full flex items-center space-x-3 px-4 py-2 text-black hover:bg-black hover:text-white transition-colors uppercase text-sm font-semibold text-left"
                         >
                           <LogOut size={18} />
-                          <span>LOGOUT</span>
+                          <span>Выйти</span>
                         </button>
                       </motion.div>
                     </>
