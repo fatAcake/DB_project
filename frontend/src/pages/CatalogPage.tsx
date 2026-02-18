@@ -1,14 +1,17 @@
 import { useState, useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { ShoppingCart, Grid3X3, LayoutGrid } from 'lucide-react'
-import { useProducts } from '@/api/products'
+import { mockProducts } from '@/data/mockProducts'
 import { useCartStore } from '@/store/useCartStore'
 import { Product } from '@/types'
 import { cn } from '@/utils/cn'
-import LoadingSpinner from '@/components/common/LoadingSpinner'
-import ErrorMessage from '@/components/common/ErrorMessage'
 
 const CATEGORY_ALL = 'Все'
+
+const categories = [
+  CATEGORY_ALL,
+  ...Array.from(new Set(mockProducts.map((p) => p.category))),
+]
 
 const ProductCard = ({
   product,
@@ -65,33 +68,11 @@ const CatalogPage = () => {
   const [category, setCategory] = useState(CATEGORY_ALL)
   const [viewMode, setViewMode] = useState<'grid' | 'compact'>('grid')
   const addToCart = useCartStore((s) => s.addItem)
-  const { data: products = [], isLoading, isError, error } = useProducts()
-
-  const categories = useMemo(
-    () => [CATEGORY_ALL, ...Array.from(new Set(products.map((p) => p.category)))],
-    [products]
-  )
 
   const filteredProducts = useMemo(() => {
-    if (category === CATEGORY_ALL) return products
-    return products.filter((p) => p.category === category)
-  }, [category, products])
-
-  if (isLoading) {
-    return (
-      <div className="max-w-7xl mx-auto flex justify-center py-20">
-        <LoadingSpinner />
-      </div>
-    )
-  }
-
-  if (isError) {
-    return (
-      <div className="max-w-7xl mx-auto py-12">
-        <ErrorMessage message={(error as Error)?.message || 'Не удалось загрузить каталог'} />
-      </div>
-    )
-  }
+    if (category === CATEGORY_ALL) return mockProducts
+    return mockProducts.filter((p) => p.category === category)
+  }, [category])
 
   return (
     <div className="max-w-7xl mx-auto">
@@ -165,7 +146,7 @@ const CatalogPage = () => {
             product={product}
             onAddToCart={(e) => {
               e.preventDefault()
-              addToCart(product, 1)
+              addToCart(product.id, 1)
             }}
           />
         ))}

@@ -8,7 +8,6 @@ const LoginPage = () => {
   const setUser = useAuthStore((s) => s.setUser)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const login = useLogin()
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -108,17 +107,11 @@ const LoginPage = () => {
                   />
                 </div>
               </div>
-              {login.isError && (
-                <p className="text-sm text-red-600">
-                  {(login.error as Error)?.message || 'Ошибка входа'}
-                </p>
-              )}
               <button
                 type="submit"
-                disabled={login.isPending}
-                className="w-full font-unbounded font-semibold bg-black text-white rounded-2xl py-3.5 hover:bg-black/90 disabled:opacity-50 transition-colors flex items-center justify-center gap-2"
+                className="w-full font-unbounded font-semibold bg-black text-white rounded-2xl py-3.5 hover:bg-black/90 transition-colors flex items-center justify-center gap-2"
               >
-                {login.isPending ? 'Вход…' : 'Войти'}
+                Войти
                 <ArrowRight size={20} />
               </button>
             </form>
