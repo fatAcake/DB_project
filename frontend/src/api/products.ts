@@ -1,32 +1,25 @@
 import { useQuery } from '@tanstack/react-query'
 import api from './axios'
-
-export interface Product {
-  id: number
-  name: string
-  price: number
-  description: string
-  image: string
-  category: string
-}
+import type { ApiProduct } from '@/types/api'
+import { apiProductToProduct } from './mappers'
 
 export const useProducts = () => {
   return useQuery({
     queryKey: ['products'],
     queryFn: async () => {
-      const { data } = await api.get<Product[]>('/products')
-      return data
+      const { data } = await api.get<ApiProduct[]>('/products')
+      return (data || []).map((p) => apiProductToProduct(p))
     },
   })
 }
 
-export const useProduct = (id: number) => {
+export const useProduct = (id: number | undefined) => {
   return useQuery({
     queryKey: ['product', id],
     queryFn: async () => {
-      const { data } = await api.get<Product>(`/products/${id}`)
-      return data
+      const { data } = await api.get<ApiProduct>(`/products/${id}`)
+      return apiProductToProduct(data)
     },
-    enabled: !!id,
+    enabled: !!id && id > 0,
   })
 }

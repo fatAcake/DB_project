@@ -6,7 +6,7 @@ interface NavLinkProps {
   to: string
   children: ReactNode
   className?: string
-  variant?: 'header' | 'sidebar' | 'minimal'
+  variant?: 'header' | 'sidebar' | 'sidebarDark' | 'minimal'
   onClick?: () => void
   style?: CSSProperties
 }
@@ -30,6 +30,12 @@ const NavLink = forwardRef<HTMLAnchorElement, NavLinkProps>(
         isActive
           ? 'bg-blue-600 text-white'
           : 'text-gray-700 hover:bg-blue-50 hover:text-blue-700 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white'
+      ),
+      sidebarDark: cn(
+        'block px-4 py-3 rounded-2xl font-medium font-unbounded text-sm',
+        isActive
+          ? 'bg-white text-black'
+          : 'text-white hover:bg-white hover:text-black'
       ),
       minimal: cn(
         'px-4 py-2 font-semibold text-sm whitespace-nowrap bg-transparent border border-transparent hover:bg-white hover:text-black rounded-xl transition-all'

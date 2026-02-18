@@ -1,9 +1,20 @@
 import { create } from 'zustand'
 
+export type UserRole = 'buyer' | 'seller' | 'admin'
+
+export interface AuthUser {
+  id: number
+  email: string
+  name: string
+  surname?: string
+  patronymic?: string
+  role?: UserRole
+}
+
 interface AuthState {
   isAuthenticated: boolean
-  user: null | { id: number; email: string; name: string; role?: 'user' | 'admin' }
-  setUser: (user: { id: number; email: string; name: string; role?: 'user' | 'admin' } | null) => void
+  user: AuthUser | null
+  setUser: (user: AuthUser | null) => void
   logout: () => void
 }
 
