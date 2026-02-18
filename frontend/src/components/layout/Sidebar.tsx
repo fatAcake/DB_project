@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useAuthStore } from '@/store/useAuthStore'
@@ -19,13 +19,15 @@ import {
   PanelLeft,
   LogIn,
   UserPlus,
+  LogOut,
 } from 'lucide-react'
 
 const SIDEBAR_WIDTH = 280
 const SIDEBAR_COLLAPSED_WIDTH = 72
 
 const Sidebar = () => {
-  const { isAuthenticated, user } = useAuthStore()
+  const { isAuthenticated, user, logout } = useAuthStore()
+  const navigate = useNavigate()
   const [collapsed, setCollapsed] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
   const [isDesktop, setIsDesktop] = useState(false)
@@ -96,10 +98,35 @@ const Sidebar = () => {
     <nav className="flex flex-col h-full py-6 px-3">
       <div className="flex-1 space-y-8 overflow-y-auto">
         <NavBlock title="Навигация" items={mainNavItems} />
-        {isAuthenticated && userNavItems.length > 0 && (
-          <NavBlock title="Личный кабинет" items={userNavItems} />
+        {isAuthenticated && (
+          <>
+            <div className="space-y-2">
+              <h2 className="text-[10px] font-unbounded font-semibold text-white/60 uppercase tracking-widest px-3 mb-2">
+                Профиль
+              </h2>
+              <div className="flex items-center gap-3 px-3 py-2 rounded-2xl bg-white/10">
+                <span className="flex-shrink-0 w-9 h-9 rounded-xl bg-white text-black flex items-center justify-center font-unbounded font-bold text-sm">
+                  {user?.name?.charAt(0)?.toUpperCase() ?? '?'}
+                </span>
+                <span className="truncate text-sm font-medium text-white">
+                  {user?.name}
+                </span>
+              </div>
+              <button
+                type="button"
+                onClick={() => { logout(); navigate('/'); }}
+                className="flex items-center gap-3 w-full px-3 py-2 rounded-2xl text-white/90 hover:bg-white/10 hover:text-white transition-colors"
+              >
+                <LogOut size={20} />
+                <span>Выйти</span>
+              </button>
+            </div>
+            {userNavItems.length > 0 && (
+              <NavBlock title="Личный кабинет" items={userNavItems} />
+            )}
+          </>
         )}
-        {adminNavItems.length > 0 && (
+        {isAuthenticated && adminNavItems.length > 0 && (
           <NavBlock title="Админ" items={adminNavItems} />
         )}
         {!isAuthenticated && (

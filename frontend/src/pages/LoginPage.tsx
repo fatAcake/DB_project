@@ -1,15 +1,23 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Mail, Lock, ArrowRight, Sparkles } from 'lucide-react'
+import { useAuthStore } from '@/store/useAuthStore'
 
 const LoginPage = () => {
   const navigate = useNavigate()
+  const setUser = useAuthStore((s) => s.setUser)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    // TODO: интеграция с API авторизации
+    // TODO: интеграция с API авторизации — после ответа сервера вызывать setUser с данными пользователя
+    setUser({
+      id: 1,
+      email,
+      name: 'Пользователь',
+      role: 'buyer',
+    })
     navigate('/')
   }
 
