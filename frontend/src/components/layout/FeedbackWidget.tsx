@@ -1,30 +1,19 @@
 import { useState } from 'react'
 import { MessageCircle, Send, X } from 'lucide-react'
-import { useCreateFeedback } from '@/api/feedback'
-import { getStoredUserId } from '@/api/auth'
 
 const FeedbackWidget = () => {
   const [open, setOpen] = useState(false)
   const [sent, setSent] = useState(false)
   const [message, setMessage] = useState('')
-  const createFeedback = useCreateFeedback()
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    const userId = getStoredUserId() ?? 1
-    createFeedback.mutate(
-      { message, user_id: userId },
-      {
-        onSuccess: () => {
-          setSent(true)
-          setMessage('')
-          setTimeout(() => {
-            setSent(false)
-            setOpen(false)
-          }, 2000)
-        },
-      }
-    )
+    setSent(true)
+    setMessage('')
+    setTimeout(() => {
+      setSent(false)
+      setOpen(false)
+    }, 2000)
   }
 
   return (
@@ -53,11 +42,6 @@ const FeedbackWidget = () => {
                 </button>
               </div>
               <form onSubmit={handleSubmit} className="p-4 space-y-3">
-                {createFeedback.isError && (
-                  <p className="text-sm text-red-600">
-                    {(createFeedback.error as Error)?.message || 'Ошибка отправки'}
-                  </p>
-                )}
                 <textarea
                   name="message"
                   value={message}
@@ -69,11 +53,10 @@ const FeedbackWidget = () => {
                 />
                 <button
                   type="submit"
-                  disabled={createFeedback.isPending}
-                  className="w-full flex items-center justify-center gap-2 font-unbounded font-semibold text-sm bg-black text-white rounded-xl py-2.5 hover:bg-black/90 disabled:opacity-50 transition-colors"
+                  className="w-full flex items-center justify-center gap-2 font-unbounded font-semibold text-sm bg-black text-white rounded-xl py-2.5 hover:bg-black/90 transition-colors"
                 >
                   <Send size={16} />
-                  {createFeedback.isPending ? 'Отправка…' : 'Отправить'}
+                  Отправить
                 </button>
               </form>
             </>
