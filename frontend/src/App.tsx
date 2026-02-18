@@ -7,6 +7,7 @@ import ProductPage from './pages/ProductPage'
 import LoginPage from './pages/LoginPage'
 import RegisterPage from './pages/RegisterPage'
 import ProfilePage from './pages/ProfilePage'
+import ProfileOrdersPage from './pages/ProfileOrdersPage'
 import AdminPage from './pages/AdminPage'
 import WorkshopPage from './pages/WorkshopPage'
 import AboutPage from './pages/AboutPage'
@@ -38,6 +39,7 @@ function App() {
             <Route path="contact" element={<ContactPage />} />
             <Route path="cart" element={<CartPage />} />
             <Route path="profile" element={<ProfilePage />} />
+            <Route path="profile/orders" element={<ProfileOrdersPage />} />
             <Route path="admin/*" element={<AdminPage />} />
             <Route path="*" element={<NotFoundPage />} />
           </Route>

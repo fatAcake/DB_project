@@ -118,15 +118,15 @@ const Header = () => {
               </NavLink>
             )}
 
-            {/* User menu */}
+            {/* User menu: аватар + выпадающее меню (профиль, выход) */}
             {isAuthenticated && (
               <div className="relative">
                 <button
                   onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-                  className="p-2 text-white hover:bg-white hover:text-black transition-colors border border-white rounded-2xl uppercase text-sm font-semibold"
-                  aria-label="User menu"
+                  className="flex items-center justify-center w-10 h-10 rounded-2xl bg-white text-black border border-white font-unbounded font-bold text-sm hover:bg-black hover:text-white hover:border-white transition-colors"
+                  aria-label="Профиль"
                 >
-                  <User size={18} />
+                  {user?.name?.charAt(0)?.toUpperCase() ?? '?'}
                 </button>
 
                 <AnimatePresence>
@@ -145,36 +145,36 @@ const Header = () => {
                         <Link
                           to="/profile"
                           onClick={() => setIsUserMenuOpen(false)}
-                          className="flex items-center space-x-3 px-4 py-2 hover:bg-black hover:text-white transition-colors uppercase text-sm font-semibold"
+                          className="flex items-center space-x-3 px-4 py-2 text-black hover:bg-black hover:text-white transition-colors uppercase text-sm font-semibold"
                         >
                           <User size={18} />
-                          <span>PROFILE</span>
+                          <span>Профиль</span>
                         </Link>
                         <Link
                           to="/profile/orders"
                           onClick={() => setIsUserMenuOpen(false)}
-                          className="flex items-center space-x-3 px-4 py-2 hover:bg-black hover:text-white transition-colors uppercase text-sm font-semibold"
+                          className="flex items-center space-x-3 px-4 py-2 text-black hover:bg-black hover:text-white transition-colors uppercase text-sm font-semibold"
                         >
                           <Package size={18} />
-                          <span>ORDERS</span>
+                          <span>Заказы</span>
                         </Link>
                         {user?.role === 'admin' && (
                           <Link
                             to="/admin"
                             onClick={() => setIsUserMenuOpen(false)}
-                            className="flex items-center space-x-3 px-4 py-2 hover:bg-black hover:text-white transition-colors uppercase text-sm font-semibold"
+                            className="flex items-center space-x-3 px-4 py-2 text-black hover:bg-black hover:text-white transition-colors uppercase text-sm font-semibold"
                           >
                             <Settings size={18} />
-                            <span>ADMIN</span>
+                            <span>Админ</span>
                           </Link>
                         )}
                         <div className="border-t border-black my-2" />
                         <button
                           onClick={handleLogout}
-                          className="w-full flex items-center space-x-3 px-4 py-2 hover:bg-black hover:text-white transition-colors text-red-600 uppercase text-sm font-semibold"
+                          className="w-full flex items-center space-x-3 px-4 py-2 text-black hover:bg-black hover:text-white transition-colors uppercase text-sm font-semibold text-left"
                         >
                           <LogOut size={18} />
-                          <span>LOGOUT</span>
+                          <span>Выйти</span>
                         </button>
                       </motion.div>
                     </>
