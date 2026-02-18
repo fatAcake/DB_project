@@ -17,6 +17,11 @@ class Settings(BaseSettings):
     DEBUG: bool = False
     ECHO: bool = False
 
+    SMTP_SERVER: str
+    SMTP_PORT: int = 587
+    SMTP_EMAIL: str
+    SMTP_PASSWORD: str
+
     class Config:
         env_file = ".env"
 
