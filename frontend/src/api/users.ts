@@ -13,9 +13,20 @@ export interface RegisterInput {
   role_id: number
 }
 
-/** Преобразует пользователя API в формат авторизации фронта */
+/** Преобразует пользователя API в формат авторизации фронта. Роль по role_name (если есть) или по role_id. */
 export function apiUserToAuthUser(u: ApiUser): AuthUser {
-  const role = u.role_id === 1 ? 'buyer' : u.role_id === 2 ? 'seller' : 'admin'
+  const role =
+    u.role_name === 'admin'
+      ? 'admin'
+      : u.role_name === 'seller'
+        ? 'seller'
+        : u.role_name === 'buyer'
+          ? 'buyer'
+          : u.role_id === 1
+            ? 'buyer'
+            : u.role_id === 2
+              ? 'seller'
+              : 'admin'
   return {
     id: u.id,
     email: u.email ?? '',
