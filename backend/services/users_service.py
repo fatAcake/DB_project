@@ -16,6 +16,7 @@ from db.sql.crud.users_crud import (
     save_password_code,
     verify_password_code,
 )
+from db.sql.crud.roles_crud import get_role, get_roles
 from services.binders_methods.binders_users import send_password_change_code_email
 from db.sql.schemas.users_schemas import UserCreate, UserUpdate, UserResponse, PasswordChangeRequest
 
@@ -31,6 +32,7 @@ class UsersService:
         user = await create_user(self.session, data)
         if not user:
             raise HTTPException(400, "Не удалось создать пользователя")
+        role = await get_role(self.session, user.role_id)
         return UserResponse(
             id=user.id,
             first_name=user.first_name,
@@ -39,6 +41,7 @@ class UsersService:
             email=user.email,
             is_acive=user.is_acive,
             role_id=user.role_id,
+            role_name=role.name if role else None,
             created_at=user.created_at,
             updated_at=user.updated_at,
         )
@@ -48,6 +51,7 @@ class UsersService:
         user = await get_user(self.session, user_id)
         if not user:
             raise HTTPException(404, "Пользователь не найден")
+        role = await get_role(self.session, user.role_id)
         return UserResponse(
             id=user.id,
             first_name=user.first_name,
@@ -56,6 +60,7 @@ class UsersService:
             email=user.email,
             is_acive=user.is_acive,
             role_id=user.role_id,
+            role_name=role.name if role else None,
             created_at=user.created_at,
             updated_at=user.updated_at,
         )
@@ -64,6 +69,8 @@ class UsersService:
     async def get_all(self, skip: int = 0, limit: int = 100) -> List[UserResponse]:
         """Получение списка пользователей"""
         users = await get_users(self.session, skip, limit)
+        roles = await get_roles(self.session, 0, 1000)
+        role_map = {r.id: r.name for r in roles}
         return [
             UserResponse(
                 id=u.id,
@@ -73,6 +80,7 @@ class UsersService:
                 email=u.email,
                 is_acive=u.is_acive,
                 role_id=u.role_id,
+                role_name=role_map.get(u.role_id),
                 created_at=u.created_at,
                 updated_at=u.updated_at,
             )
@@ -84,6 +92,7 @@ class UsersService:
         user = await update_user(self.session, user_id, data)
         if not user:
             raise HTTPException(404, "Пользователь не найден")
+        role = await get_role(self.session, user.role_id)
         return UserResponse(
             id=user.id,
             first_name=user.first_name,
@@ -92,6 +101,7 @@ class UsersService:
             email=user.email,
             is_acive=user.is_acive,
             role_id=user.role_id,
+            role_name=role.name if role else None,
             created_at=user.created_at,
             updated_at=user.updated_at,
         )

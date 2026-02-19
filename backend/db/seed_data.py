@@ -9,6 +9,7 @@ from datetime import datetime, timezone
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from db.sql.crud.roles_crud import get_role_by_name
 from db.session import AsyncSessionLocalPostgres
 from db.sql.models import (
     Roles,
@@ -150,10 +151,14 @@ FEEDBACK_DATA = [
 
 
 async def _ensure_role_and_user(session: AsyncSession) -> None:
-    """Создаёт одну роль и одного пользователя, если их ещё нет (для FK)."""
+    """Создаёт роли (user, admin) и одного пользователя, если их ещё нет (для FK)."""
     role_count = await session.execute(select(Roles))
     if len(list(role_count.scalars().all())) == 0:
         session.add(Roles(**SEED_ROLE))
+        await session.flush()
+    # Роль admin для доступа в админ-панель (проверка по role.name == "admin")
+    if await get_role_by_name(session, "admin") is None:
+        session.add(Roles(name="admin"))
         await session.flush()
     user_count = await session.execute(select(Users).limit(1))
     if user_count.scalar_one_or_none() is None:

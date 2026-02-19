@@ -13,6 +13,7 @@ from api.routers.transactions import router as transaction_router
 from api.routers.feedback import router as feedback_router
 from api.routers.confirm_passport_data import router as cpd_router
 from api.routers.users_router import router as user_router
+from api.routers.roles_router import router as roles_router
 import uvicorn
 
 try:
@@ -43,6 +44,7 @@ try:
     app.include_router(feedback_router)
     app.include_router(cpd_router)
     app.include_router(user_router)
+    app.include_router(roles_router)
     if __name__ == "__main__":
         uvicorn.run(app, host="0.0.0.0", port=8000)
 

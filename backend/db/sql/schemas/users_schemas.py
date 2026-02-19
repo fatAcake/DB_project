@@ -43,7 +43,7 @@ class UserInDBBase(UserBase):
 
 class UserResponse(UserInDBBase):
     """Схема для ответа API (без пароля)"""
-    pass
+    role_name: Optional[str] = Field(None, description="Название роли (name из roles)")
 
 
 class PasswordSendCodeRequest(BaseModel):
