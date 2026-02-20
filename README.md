@@ -22,3 +22,5 @@
 5.3 перейдите по ссылке http://localhost:3000/
 
 ВАЖНО для корректной работы должны быть запущены три PowerShell и pgAdmin
+
+https://wiki.yandex.ru/_i/#9c34addf-bf7b-4ffb-bab8-ae2a87a9eba8
