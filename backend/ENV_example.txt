@@ -12,7 +12,7 @@ MONGO_HOST=localhost
 MONGO_PORT=27017
 
 #=============Отправка email-уведомлений
-SMTP_EMAIL=
+SMTP_EMAIL=we.we.1964@mail.ru
 SMTP_PASSWORD=
 SMTP_SERVER="smtp.gmail.com"
 SMTP_PORT=587
